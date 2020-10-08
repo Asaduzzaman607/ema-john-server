@@ -6,7 +6,7 @@ const cors = require("cors");
 
 app.use(bodyParser.json());
 app.use(cors());
-const port = 5000;
+const port = 8000;
 
 app.get("/", (req, res) => {
   res.send(" Working perfectly");
@@ -31,9 +31,12 @@ client.connect((err) => {
   });
   //to read the
   app.get("/products", (req, res) => {
-    productsCollection.find({}).toArray((err, documents) => {
-      res.send(documents);
-    });
+    const search = req.query.search;
+    productsCollection
+      .find({ name: { $regex: search } })
+      .toArray((err, documents) => {
+        res.send(documents);
+      });
   });
 
   app.get("/products/:key", (req, res) => {
